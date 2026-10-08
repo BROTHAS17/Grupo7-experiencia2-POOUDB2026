@@ -1,0 +1,18 @@
+# Maven
+target/
+
+# NetBeans
+nbproject/private/
+nbactions.xml
+
+# IntelliJ
+.idea/
+*.iml
+out/
+
+# Eclipse / VS Code
+.classpath
+.project
+.settings/
+bin/
+.vscode/
