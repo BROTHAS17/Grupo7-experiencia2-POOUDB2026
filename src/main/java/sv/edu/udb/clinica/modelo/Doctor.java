@@ -2,28 +2,22 @@ package sv.edu.udb.clinica.modelo;
 
 /**
  * Representa un registro de la tabla doctores.
+ * Hereda de la clase abstracta Persona.
  */
-public class Doctor {
-
+public class Doctor extends Persona {
     private int idDoctor;
-    private String nombres;
-    private String apellidos;
     private String especialidad;
     private String numeroJvpm;
-    private String telefono;
-    private String correo;
 
     public Doctor() {
+        super();
     }
 
     public Doctor(String nombres, String apellidos, String especialidad, String numeroJvpm,
-            String telefono, String correo) {
-        this.nombres = nombres;
-        this.apellidos = apellidos;
+                  String telefono, String correo) {
+        super(nombres, apellidos, telefono, correo);
         this.especialidad = especialidad;
         this.numeroJvpm = numeroJvpm;
-        this.telefono = telefono;
-        this.correo = correo;
     }
 
     public int getIdDoctor() {
@@ -32,22 +26,6 @@ public class Doctor {
 
     public void setIdDoctor(int idDoctor) {
         this.idDoctor = idDoctor;
-    }
-
-    public String getNombres() {
-        return nombres;
-    }
-
-    public void setNombres(String nombres) {
-        this.nombres = nombres;
-    }
-
-    public String getApellidos() {
-        return apellidos;
-    }
-
-    public void setApellidos(String apellidos) {
-        this.apellidos = apellidos;
     }
 
     public String getEspecialidad() {
@@ -64,26 +42,6 @@ public class Doctor {
 
     public void setNumeroJvpm(String numeroJvpm) {
         this.numeroJvpm = numeroJvpm;
-    }
-
-    public String getTelefono() {
-        return telefono;
-    }
-
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
-    }
-
-    public String getCorreo() {
-        return correo;
-    }
-
-    public void setCorreo(String correo) {
-        this.correo = correo;
-    }
-
-    public String getNombreCompleto() {
-        return nombres + " " + apellidos;
     }
 
     @Override

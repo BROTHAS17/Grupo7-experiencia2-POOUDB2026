@@ -5,32 +5,26 @@ import java.time.LocalDateTime;
 
 /**
  * Representa un registro de la tabla pacientes.
+ * Hereda de la clase abstracta Persona.
  */
-public class Paciente {
-
+public class Paciente extends Persona {
     private int idPaciente;
-    private String nombres;
-    private String apellidos;
     private String dui;
     private LocalDate fechaNacimiento;
     private String genero; // "M" o "F"
-    private String telefono;
-    private String correo;
     private String direccion;
     private LocalDateTime fechaRegistro;
 
     public Paciente() {
+        super();
     }
 
     public Paciente(String nombres, String apellidos, String dui, LocalDate fechaNacimiento,
-            String genero, String telefono, String correo, String direccion) {
-        this.nombres = nombres;
-        this.apellidos = apellidos;
+                    String genero, String telefono, String correo, String direccion) {
+        super(nombres, apellidos, telefono, correo);
         this.dui = dui;
         this.fechaNacimiento = fechaNacimiento;
         this.genero = genero;
-        this.telefono = telefono;
-        this.correo = correo;
         this.direccion = direccion;
     }
 
@@ -40,22 +34,6 @@ public class Paciente {
 
     public void setIdPaciente(int idPaciente) {
         this.idPaciente = idPaciente;
-    }
-
-    public String getNombres() {
-        return nombres;
-    }
-
-    public void setNombres(String nombres) {
-        this.nombres = nombres;
-    }
-
-    public String getApellidos() {
-        return apellidos;
-    }
-
-    public void setApellidos(String apellidos) {
-        this.apellidos = apellidos;
     }
 
     public String getDui() {
@@ -82,22 +60,6 @@ public class Paciente {
         this.genero = genero;
     }
 
-    public String getTelefono() {
-        return telefono;
-    }
-
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
-    }
-
-    public String getCorreo() {
-        return correo;
-    }
-
-    public void setCorreo(String correo) {
-        this.correo = correo;
-    }
-
     public String getDireccion() {
         return direccion;
     }
@@ -112,10 +74,6 @@ public class Paciente {
 
     public void setFechaRegistro(LocalDateTime fechaRegistro) {
         this.fechaRegistro = fechaRegistro;
-    }
-
-    public String getNombreCompleto() {
-        return nombres + " " + apellidos;
     }
 
     @Override
