@@ -11,10 +11,9 @@ import sv.edu.udb.clinica.modelo.CitaMedica;
 import sv.edu.udb.clinica.modelo.Doctor;
 import sv.edu.udb.clinica.modelo.Paciente;
 
-/**
- * Verifica que la conexión JDBC funcione y muestra los datos de las tres tablas.
- * Ejecutar después de cargar database/citas_medicas.sql en MySQL.
- */
+// Verifica que la conexión JDBC funcione y muestra los datos de las tres tablas
+// Ejecutar después de cargar database/citas_medicas.sql en MySQL
+
 public class PruebaConexion {
 
     public static void main(String[] args) {

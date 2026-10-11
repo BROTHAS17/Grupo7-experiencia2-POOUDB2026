@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="340" height="220" viewBox="0 0 340 220">
+  <circle cx="250" cy="110" r="104" fill="#FFFFFF" fill-opacity="0.08"/>
+  <circle cx="250" cy="110" r="74" fill="#FFFFFF" fill-opacity="0.10"/>
+  <circle cx="318" cy="30" r="14" fill="#FFFFFF" fill-opacity="0.18"/>
+  <circle cx="60" cy="186" r="9" fill="#FFFFFF" fill-opacity="0.18"/>
+  <circle cx="106" cy="40" r="5" fill="#FFFFFF" fill-opacity="0.25"/>
+  <!-- tarjeta de calendario -->
+  <rect x="150" y="38" width="170" height="150" rx="16" fill="#FFFFFF" fill-opacity="0.97"/>
+  <path d="M150 54a16 16 0 0 1 16-16h138a16 16 0 0 1 16 16v22H150z" fill="#0F766E"/>
+  <rect x="180" y="26" width="10" height="26" rx="5" fill="#CCFBF1"/>
+  <rect x="280" y="26" width="10" height="26" rx="5" fill="#CCFBF1"/>
+  <g fill="#CBD5E1">
+    <rect x="168" y="92" width="22" height="16" rx="4"/><rect x="200" y="92" width="22" height="16" rx="4"/>
+    <rect x="232" y="92" width="22" height="16" rx="4"/><rect x="264" y="92" width="22" height="16" rx="4"/>
+    <rect x="168" y="118" width="22" height="16" rx="4"/><rect x="200" y="118" width="22" height="16" rx="4"/>
+    <rect x="264" y="118" width="22" height="16" rx="4"/>
+    <rect x="168" y="144" width="22" height="16" rx="4"/><rect x="232" y="144" width="22" height="16" rx="4"/>
+  </g>
+  <rect x="232" y="118" width="22" height="16" rx="4" fill="#14B8A6"/>
+  <rect x="200" y="144" width="22" height="16" rx="4" fill="#99F6E4"/>
+  <!-- distintivo con cruz -->
+  <circle cx="150" cy="150" r="38" fill="#14B8A6"/>
+  <circle cx="150" cy="150" r="38" fill="none" stroke="#FFFFFF" stroke-width="6"/>
+  <rect x="144" y="132" width="12" height="36" rx="4" fill="#FFFFFF"/>
+  <rect x="132" y="144" width="36" height="12" rx="4" fill="#FFFFFF"/>
+</svg>
