@@ -13,7 +13,29 @@ public class CitaService {
      * Registra una nueva cita médica aplicando validaciones y control de duplicidad de horarios.
      */
     public int registrarCita(CitaMedica cita) throws CitaDuplicadaException, SQLException, IllegalArgumentException {
-        // Validación de campos obligatorios
+        validarCita(cita);
+        return citaDAO.insertarSiDisponible(cita);
+    }
+
+    /** Actualiza una cita sin bloquearse a sí misma y valida el nuevo horario. */
+    public boolean actualizarCita(CitaMedica cita) throws CitaDuplicadaException, SQLException, IllegalArgumentException {
+        validarCita(cita);
+        if (cita.getIdCita() <= 0) {
+            throw new IllegalArgumentException("El identificador de la cita es obligatorio para actualizar.");
+        }
+        return citaDAO.actualizarSiDisponible(cita);
+    }
+
+    private void validarCita(CitaMedica cita) {
+        if (cita == null) {
+            throw new IllegalArgumentException("Los datos de la cita son obligatorios.");
+        }
+        if (cita.getIdPaciente() <= 0) {
+            throw new IllegalArgumentException("Debe seleccionar un paciente válido.");
+        }
+        if (cita.getIdDoctor() <= 0) {
+            throw new IllegalArgumentException("Debe seleccionar un doctor válido.");
+        }
         if (cita.getFecha() == null) {
             throw new IllegalArgumentException("La fecha de la cita es obligatoria.");
         }
@@ -23,29 +45,9 @@ public class CitaService {
         if (cita.getMotivo() == null || cita.getMotivo().trim().isEmpty()) {
             throw new IllegalArgumentException("El motivo de la consulta no puede estar vacío.");
         }
-
-        // Regla de negocio: Verificar si el doctor ya tiene cita en ese horario y no está cancelada
-        if (citaDAO.existeCitaEnHorario(cita)) {
-            throw new CitaDuplicadaException("El doctor seleccionado ya tiene una cita activa asignada en esta misma fecha y hora.");
+        if (cita.getEstado() == null) {
+            throw new IllegalArgumentException("El estado de la cita es obligatorio.");
         }
-
-        // Sitodo es correcto, procede a insertar mediante el DAO
-        return citaDAO.insertar(cita);
-    }
-
-    /**
-     * Actualizar los datos de una cita existente
-     */
-    public boolean actualizarCita(CitaMedica cita) throws CitaDuplicadaException, SQLException, IllegalArgumentException {
-        if (cita.getFecha() == null || cita.getHora() == null) {
-            throw new IllegalArgumentException("La fecha y la hora son obligatorias para la actualización.");
-        }
-
-        if (citaDAO.existeCitaEnHorario(cita)) {
-            throw new CitaDuplicadaException("No se puede reprogramar: el doctor ya tiene otra cita activa en ese horario.");
-        }
-
-        return citaDAO.actualizar(cita);
     }
 
     public boolean cambiarEstadoCita(int idCita, CitaMedica.Estado nuevoEstado) throws SQLException {

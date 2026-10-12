@@ -92,6 +92,20 @@ public class DoctorDAO {
         }
     }
 
+    /**
+     * @return el doctor con ese número JVPM, o null si no existe
+     */
+    public Doctor buscarPorNumeroJvpm(String numeroJvpm) throws SQLException {
+        String sql = "SELECT " + COLUMNAS + " FROM doctores WHERE numero_jvpm = ?";
+        try (Connection con = ConexionBD.obtenerConexion();
+                PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, numeroJvpm);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? mapear(rs) : null;
+            }
+        }
+    }
+
     public List<Doctor> listar() throws SQLException {
         List<Doctor> doctores = new ArrayList<>();
         try (Connection con = ConexionBD.obtenerConexion();

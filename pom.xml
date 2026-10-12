@@ -12,6 +12,7 @@
     <properties>
         <maven.compiler.release>17</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <flatlaf.version>3.6</flatlaf.version>
     </properties>
 
     <dependencies>
@@ -21,5 +22,32 @@
             <artifactId>mysql-connector-j</artifactId>
             <version>9.7.0</version>
         </dependency>
+
+        <!-- Interfaz gráfica: apariencia moderna para Swing (tema claro y oscuro) -->
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf</artifactId>
+            <version>${flatlaf.version}</version>
+        </dependency>
+        <!-- Iconos SVG (FlatSVGIcon) y transición animada entre temas -->
+        <dependency>
+            <groupId>com.formdev</groupId>
+            <artifactId>flatlaf-extras</artifactId>
+            <version>${flatlaf.version}</version>
+        </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Permite ejecutar la aplicación con:  mvn compile exec:java -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.5.0</version>
+                <configuration>
+                    <mainClass>sv.edu.udb.clinica.Main</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

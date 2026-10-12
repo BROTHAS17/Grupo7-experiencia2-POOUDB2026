@@ -6,7 +6,10 @@
 --  Ejecutar completo en MySQL Workbench o desde consola:
 --      mysql -u root -p < database/citas_medicas.sql
 --
---  OJO: elimina y vuelve a crear las tablas (se pierden los datos).
+--  IMPORTANTE: SCRIPT DE INICIALIZACIÓN DESTRUCTIVO PARA DESARROLLO/PRUEBAS.
+--  Elimina las tablas existentes y todos sus datos antes de recrearlas.
+--  NO ejecutar sobre una base con información que se desea conservar.
+--  Para crear tablas sin borrar datos existentes, revisar crear_esquema.sql.
 -- =====================================================================
 
 CREATE DATABASE IF NOT EXISTS citas_medicas
