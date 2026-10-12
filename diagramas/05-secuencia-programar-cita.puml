@@ -1,0 +1,19 @@
+
+@startuml
+
+actor Paciente
+participant "Interfaz" as UI
+participant "GestionCitas" as GC
+participant "CitaDAO" as DAO
+database "Base de datos" as BD
+
+Paciente -> UI : Solicitar cita
+UI -> GC : programarCita()
+GC -> DAO : guardarCita()
+DAO -> BD : INSERT cita
+BD --> DAO : Resultado
+DAO --> GC : Confirmacion
+GC --> UI : Resultado de la operacion
+UI --> Paciente : Mostrar confirmacion
+
+@enduml

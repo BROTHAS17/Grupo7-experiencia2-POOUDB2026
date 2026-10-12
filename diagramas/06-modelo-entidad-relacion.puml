@@ -1,0 +1,33 @@
+
+@startuml
+hide circle
+skinparam linetype ortho
+
+entity "PACIENTE" as PACIENTE {
+    * id_paciente : INT <<PK>>
+    --
+    nombre : VARCHAR
+    telefono : VARCHAR
+}
+
+entity "MEDICO" as MEDICO {
+    * id_medico : INT <<PK>>
+    --
+    nombre : VARCHAR
+    especialidad : VARCHAR
+}
+
+entity "CITA" as CITA {
+    * id_cita : INT <<PK>>
+    --
+    fecha : DATE
+    hora : TIME
+    estado : VARCHAR
+    id_paciente : INT <<FK>>
+    id_medico : INT <<FK>>
+}
+
+PACIENTE ||--o{ CITA
+MEDICO ||--o{ CITA
+
+@enduml

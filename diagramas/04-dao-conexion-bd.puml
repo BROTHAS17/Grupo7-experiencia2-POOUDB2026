@@ -1,0 +1,20 @@
+
+@startuml
+
+class CitaDAO {
+    +guardarCita()
+    +consultarCitas()
+    +cancelarCita()
+}
+
+class ConexionBD {
+    +conectar()
+    +desconectar()
+}
+
+database "Base de datos" as BD
+
+CitaDAO --> ConexionBD : utiliza
+ConexionBD --> BD : establece conexion
+
+@enduml

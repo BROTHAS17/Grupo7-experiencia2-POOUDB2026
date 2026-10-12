@@ -1,0 +1,22 @@
+
+@startuml
+left to right direction
+
+actor Paciente
+actor Administrador
+
+rectangle "Sistema de Gestion de Citas" {
+    usecase "Solicitar cita" as UC1
+    usecase "Consultar citas" as UC2
+    usecase "Cancelar cita" as UC3
+    usecase "Gestionar citas" as UC4
+}
+
+Paciente --> UC1
+Paciente --> UC2
+Paciente --> UC3
+
+Administrador --> UC4
+
+@enduml
+
