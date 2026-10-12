@@ -10,6 +10,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import sv.edu.udb.clinica.conexion.ConexionBD;
+import sv.edu.udb.clinica.excepciones.CitaDuplicadaException;
 import sv.edu.udb.clinica.modelo.CitaMedica;
 
 /**
@@ -50,13 +51,71 @@ public class CitaMedicaDAO {
             + "WHERE id_doctor = ? AND fecha = ? AND hora = ? AND estado <> 'CANCELADA' AND id_cita <> ?";
 
     /**
-     * Inserta una cita y le asigna el id generado por la base de datos.
+     * Inserta una cita dentro de una transacción que bloquea al doctor.
+     * Así las reservas simultáneas para el mismo doctor se verifican en serie.
      *
      * @return id de la nueva cita
      */
-    public int insertar(CitaMedica cita) throws SQLException {
-        try (Connection con = ConexionBD.obtenerConexion();
-                PreparedStatement ps = con.prepareStatement(SQL_INSERTAR, Statement.RETURN_GENERATED_KEYS)) {
+    public int insertarSiDisponible(CitaMedica cita) throws SQLException, CitaDuplicadaException {
+        try (Connection con = ConexionBD.obtenerConexion()) {
+            con.setAutoCommit(false);
+            try {
+                bloquearDoctor(con, cita.getIdDoctor());
+                if (ocupaHorario(cita) && existeCitaEnHorario(con, cita)) {
+                    throw new CitaDuplicadaException(
+                            "El doctor seleccionado ya tiene una cita activa asignada en esta misma fecha y hora.");
+                }
+                int id = insertar(con, cita);
+                con.commit();
+                return id;
+            } catch (SQLException | CitaDuplicadaException ex) {
+                con.rollback();
+                throw ex;
+            }
+        }
+    }
+
+    /**
+     * Actualiza una cita y comprueba el horario bajo el mismo bloqueo transaccional.
+     */
+    public boolean actualizarSiDisponible(CitaMedica cita) throws SQLException, CitaDuplicadaException {
+        try (Connection con = ConexionBD.obtenerConexion()) {
+            con.setAutoCommit(false);
+            try {
+                bloquearDoctor(con, cita.getIdDoctor());
+                if (ocupaHorario(cita) && existeCitaEnHorario(con, cita)) {
+                    throw new CitaDuplicadaException(
+                            "No se puede reprogramar: el doctor ya tiene otra cita activa en ese horario.");
+                }
+                boolean actualizada = actualizar(con, cita);
+                con.commit();
+                return actualizada;
+            } catch (SQLException | CitaDuplicadaException ex) {
+                con.rollback();
+                throw ex;
+            }
+        }
+    }
+
+    private void bloquearDoctor(Connection con, int idDoctor) throws SQLException {
+        try (PreparedStatement ps = con.prepareStatement(
+                "SELECT id_doctor FROM doctores WHERE id_doctor = ? FOR UPDATE")) {
+            ps.setInt(1, idDoctor);
+            try (ResultSet rs = ps.executeQuery()) {
+                // La clave foránea del INSERT/UPDATE informará si el doctor no existe.
+                if (rs.next()) {
+                    rs.getInt(1);
+                }
+            }
+        }
+    }
+
+    private boolean ocupaHorario(CitaMedica cita) {
+        return cita.getEstado() != CitaMedica.Estado.CANCELADA;
+    }
+
+    private int insertar(Connection con, CitaMedica cita) throws SQLException {
+        try (PreparedStatement ps = con.prepareStatement(SQL_INSERTAR, Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, cita.getIdPaciente());
             ps.setInt(2, cita.getIdDoctor());
             ps.setObject(3, cita.getFecha());
@@ -65,7 +124,6 @@ public class CitaMedicaDAO {
             ps.setString(6, cita.getEstado().name());
             ps.setString(7, cita.getObservaciones());
             ps.executeUpdate();
-
             try (ResultSet rs = ps.getGeneratedKeys()) {
                 if (rs.next()) {
                     cita.setIdCita(rs.getInt(1));
@@ -75,14 +133,8 @@ public class CitaMedicaDAO {
         }
     }
 
-    /**
-     * Actualiza todos los datos de la cita según su id.
-     *
-     * @return true si se modificó algún registro
-     */
-    public boolean actualizar(CitaMedica cita) throws SQLException {
-        try (Connection con = ConexionBD.obtenerConexion();
-                PreparedStatement ps = con.prepareStatement(SQL_ACTUALIZAR)) {
+    private boolean actualizar(Connection con, CitaMedica cita) throws SQLException {
+        try (PreparedStatement ps = con.prepareStatement(SQL_ACTUALIZAR)) {
             ps.setInt(1, cita.getIdPaciente());
             ps.setInt(2, cita.getIdDoctor());
             ps.setObject(3, cita.getFecha());
@@ -92,6 +144,28 @@ public class CitaMedicaDAO {
             ps.setString(7, cita.getObservaciones());
             ps.setInt(8, cita.getIdCita());
             return ps.executeUpdate() > 0;
+        }
+    }
+
+    /**
+     * Inserta una cita y le asigna el id generado por la base de datos.
+     *
+     * @return id de la nueva cita
+     */
+    public int insertar(CitaMedica cita) throws SQLException {
+        try (Connection con = ConexionBD.obtenerConexion()) {
+            return insertar(con, cita);
+        }
+    }
+
+    /**
+     * Actualiza todos los datos de la cita según su id.
+     *
+     * @return true si se modificó algún registro
+     */
+    public boolean actualizar(CitaMedica cita) throws SQLException {
+        try (Connection con = ConexionBD.obtenerConexion()) {
+            return actualizar(con, cita);
         }
     }
 
@@ -150,8 +224,13 @@ public class CitaMedicaDAO {
      * Sirve para validar antes de insertar o reprogramar; al actualizar se ignora la misma cita.
      */
     public boolean existeCitaEnHorario(CitaMedica cita) throws SQLException {
-        try (Connection con = ConexionBD.obtenerConexion();
-                PreparedStatement ps = con.prepareStatement(SQL_EXISTE_EN_HORARIO)) {
+        try (Connection con = ConexionBD.obtenerConexion()) {
+            return existeCitaEnHorario(con, cita);
+        }
+    }
+
+    private boolean existeCitaEnHorario(Connection con, CitaMedica cita) throws SQLException {
+        try (PreparedStatement ps = con.prepareStatement(SQL_EXISTE_EN_HORARIO)) {
             ps.setInt(1, cita.getIdDoctor());
             ps.setObject(2, cita.getFecha());
             ps.setObject(3, cita.getHora());
