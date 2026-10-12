@@ -5,14 +5,21 @@ Experiencia de aprendizaje 2 POO UDB 2026 Grupo 7
 
 ### 1. Crear la base de datos
 
-Ejecutar el script completo en MySQL Workbench, o desde la consola:
+**Para una instalación nueva de desarrollo con datos de prueba**, ejecutar en MySQL Workbench o desde la consola:
 
 ```bash
 mysql -u root -p < database/citas_medicas.sql
 ```
 
-Crea (si no existe) la base `citas_medicas` y dentro las tablas `pacientes`, `doctores` y `citas_medicas`, y carga datos de prueba.
-En `database/sentencias_basicas.sql` están las sentencias de inserción, actualización y consulta de cada tabla.
+**Atención:** este script es destructivo: elimina y vuelve a crear las tablas `citas_medicas`, `doctores` y `pacientes`, por lo que borra los datos que ya existan. Úselo solo cuando quiera reiniciar la base de pruebas y después de confirmar que no necesita esos datos.
+
+Si solo necesita crear las tablas que faltan sin eliminar tablas existentes ni cargar datos de ejemplo, use:
+
+```bash
+mysql -u root -p < database/crear_esquema.sql
+```
+
+El script `crear_esquema.sql` usa `CREATE TABLE IF NOT EXISTS`: conserva las tablas existentes, pero no modifica una estructura antigua ni agrega datos de prueba. En `database/sentencias_basicas.sql` están las sentencias de inserción, actualización y consulta de cada tabla.
 
 ### 2. Configurar la conexión
 
