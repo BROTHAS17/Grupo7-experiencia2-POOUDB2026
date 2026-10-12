@@ -1,0 +1,26 @@
+
+@startuml
+
+class Paciente {
+    -idPaciente: int
+    -nombre: String
+    -telefono: String
+}
+
+class Cita {
+    -idCita: int
+    -fecha: Date
+    -hora: String
+    -estado: String
+}
+
+class Medico {
+    -idMedico: int
+    -nombre: String
+    -especialidad: String
+}
+
+Paciente "1" -- "0..*" Cita : solicita
+Medico "1" -- "0..*" Cita : atiende
+
+@enduml
