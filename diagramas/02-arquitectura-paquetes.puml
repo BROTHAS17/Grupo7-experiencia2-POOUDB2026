@@ -1,0 +1,23 @@
+
+@startuml
+package "Presentacion" {
+    [Interfaz de usuario]
+}
+
+package "Logica de negocio" {
+    [Gestion de citas]
+}
+
+package "Acceso a datos" {
+    [DAO]
+    [ConexionBD]
+}
+
+database "Base de datos" as BD
+
+[Interfaz de usuario] --> [Gestion de citas]
+[Gestion de citas] --> [DAO]
+[DAO] --> [ConexionBD]
+[ConexionBD] --> BD
+
+@enduml
