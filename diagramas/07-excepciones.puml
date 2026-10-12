@@ -1,0 +1,13 @@
+
+@startuml
+
+class Exception
+class SQLException
+class "CitaNoDisponibleException" as CitaNoDisponibleException
+class "DatosInvalidosException" as DatosInvalidosException
+
+Exception <|-- SQLException
+Exception <|-- CitaNoDisponibleException
+Exception <|-- DatosInvalidosException
+
+@enduml
